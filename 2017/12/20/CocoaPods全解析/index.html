@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Beantech | 豆科技
+          CocoaPods全解析 - Beantech | 豆科技
         
     </title>
 
-    <link rel="canonical" href="http://yoursite-url/2017/10/22/CocoaPods全解析/">
+    <link rel="canonical" href="http://yoursite-url/2017/12/20/CocoaPods全解析/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -69,7 +69,7 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('undefined')
+            background-image: url('Demo.png')
             /*post*/
         
     }
@@ -90,12 +90,16 @@
                     <div class="post-heading">
                         <div class="tags">
                             
+                              <a class="tag" href="/tags/#Tech" title="Tech">Tech</a>
+                            
+                              <a class="tag" href="/tags/#Tools" title="Tools">Tools</a>
+                            
                         </div>
-                        <h1></h1>
-                        <h2 class="subheading"></h2>
+                        <h1>CocoaPods全解析</h1>
+                        <h2 class="subheading">关于iOS包管理工具Cocoapods的全方位指北.</h2>
                         <span class="meta">
                             Posted by Luis Gin on
-                            2017-10-22
+                            2017-12-20
                         </span>
                     </div>
                 
@@ -348,13 +352,9 @@
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/2017/10/22/Swift说明/" data-toggle="tooltip" data-placement="top" title="">&larr; Previous Post</a>
+                            <a href="/2017/12/20/Swift说明/" data-toggle="tooltip" data-placement="top" title="[Swift] Swift语法进阶说明<一>">&larr; Previous Post</a>
                         </li>
                     
-                    
-                        <li class="next">
-                            <a href="/2017/03/18/hexo-theme-beantech/" data-toggle="tooltip" data-placement="top" title="[Hexo] Theme BeanTech">Next Post &rarr;</a>
-                        </li>
                     
                 </ul>
 
@@ -378,6 +378,17 @@
             <!-- Tabe of Content -->
             <!-- Table of Contents -->
 
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">CocoaPods全解析</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">安装CocoaPods</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">创建Pods索引</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">Pod仓库管理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.3.0.1.</span> <span class="toc-nav-text">Pod repo命令</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.3.0.2.</span> <span class="toc-nav-text">Pod cache命令</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.3.0.3.</span> <span class="toc-nav-text">运作原理</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">Pod项目管理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.4.1.</span> <span class="toc-nav-text">Step.1 - 创建Pod工程</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.4.2.</span> <span class="toc-nav-text">Step.2 - Pod工程开发</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.4.3.</span> <span class="toc-nav-text">Step.3 - 上传到远程Git库</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.4.4.</span> <span class="toc-nav-text">Step.4 - 编辑podspec文件</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.4.5.</span> <span class="toc-nav-text">Step.4 - 验证上传Specs文件</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.4.6.</span> <span class="toc-nav-text">Setp.5 - 在项目中使用</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text">问题</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.5.1.</span> <span class="toc-nav-text">搜不到pod search</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.5.2.</span> <span class="toc-nav-text">error</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.6.</span> <span class="toc-nav-text">Author</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
                 
             <!-- Sidebar Container -->
             <div class="
@@ -392,6 +403,10 @@
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
+                          <a class="tag" href="/tags/#Tech" title="Tech">Tech</a>
+                        
+                          <a class="tag" href="/tags/#Tools" title="Tools">Tools</a>
+                        
                     </div>
                 </section>
                 
@@ -425,8 +440,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "your-disqus-ID";
-    var disqus_identifier = "http://yoursite-url/2017/10/22/CocoaPods全解析/";
-    var disqus_url = "http://yoursite-url/2017/10/22/CocoaPods全解析/";
+    var disqus_identifier = "http://yoursite-url/2017/12/20/CocoaPods全解析/";
+    var disqus_url = "http://yoursite-url/2017/12/20/CocoaPods全解析/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
