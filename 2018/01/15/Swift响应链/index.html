@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Articles | LuisGin.Tech.io
+          [Swift] Swift响应链 - Articles | LuisGin.Tech.io
         
     </title>
 
-    <link rel="canonical" href="http://yoursite-url/">
+    <link rel="canonical" href="http://yoursite-url/2018/01/15/Swift响应链/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -69,8 +69,8 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('/img/header_img/home-bg-2-dark.png') 
-            /*config*/
+            background-image: url('Demo.png')
+            /*post*/
         
     }
     
@@ -87,10 +87,20 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 
-                    <div class="site-heading">
-                        <h1>T-Land of Luis_Gin</h1>
-                        <!--<hr class="small">-->
-                        <span class="subheading">Articles about Swift, Python &amp; Terminal Tools</span>
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Tech" title="Tech">Tech</a>
+                            
+                              <a class="tag" href="/tags/#Swift" title="Swift">Swift</a>
+                            
+                        </div>
+                        <h1>[Swift] Swift响应链</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by Luis Gin on
+                            2018-01-15
+                        </span>
                     </div>
                 
 
@@ -193,333 +203,204 @@
 
 
     <!-- Main Content -->
-    <!-- Main Content -->
-<div class="container">
-    <div class="row">
-        
+    <!-- Modify by Yu-Hsuan Yen -->
 
-<!-- USE SIDEBAR -->
-    <!-- Post Container -->
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
             <div class="
-                col-lg-8 col-lg-offset-1
-                col-md-8 col-md-offset-1
-                col-sm-12
-                col-xs-12
-                post-container
-            ">
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1><span id="swift响应链">Swift响应链</span></h1>
+<p>对iOS环境中的响应顺序做了简单的研究。</p>
+<h2><span id="宏观执行顺序">宏观执行顺序</span></h2>
+<h4><span id="输入">输入</span></h4>
+<p>对于每一个应用而言，输入大致包括以下四种。</p>
+<ol>
+<li>UITouch最常见的触摸事件</li>
+<li>UIMotion传感器事件</li>
+<li>OtherExtension扩展输入，必然存在于同一容器Container中(该容器定义可参见Target-Capability中的App-group)，常见的有key-board和Assitive-Touch</li>
+<li>外部输入。系统通知，iCloud，Apple Notification等等</li>
+</ol>
+<p>其中事件4响应者必须单独注册于application，事件2和3会发送给First-responder，而事件1会执行一套完整的寻找响应机制。由于事件2和3的响应一般不会影响响应者的注册，本文仅将着重讨论事件1的归纳与传递。</p>
+<p>Tip1: 关于第一响应者，可以由<code>Instance.isFirstResponder() -&gt; Bool</code>判断是否为第一响应者。另包含两组常用的方法:<code>canBecomeFirstResponder()</code>和<code>becomeFirstResponder()</code>（对应resign）。第一响应者唯一。第一响应者不会自动放弃，但可以被替代。响应过程中可以转交第一响应者身份，</p>
+<h5><span id="test-1">Test 1</span></h5>
+<p><img src="1.png" alt=""></p>
+<p>Tip2: 响应者链载入顺序低于Load(同Runloop)，因此在init和load相关方法里均无法开启。</p>
+<h4><span id="uitouch">UITouch</span></h4>
+<p>讨论由屏幕触摸而引申出的UITouch系事件，当对屏幕点击时，立刻生成UITouch，并产生响应的UIEvent供应传递。区别于Touch began方法，UITouch的生成不依赖于任何自定义属性或方法。(iOS9后也支持UIPress)</p>
+<p>然后会从UIApplication开始寻找响应者(UIApplication是UIResponder的子类)，通常将依次进入UIApplication-&gt;KeyWindow-&gt;RootViewController-&gt;FrontViewController并倒序递归执行HitTest方法。在这一流程中，默认会有三种可能消除响应潜力。</p>
+<ol>
+<li>隐藏，不可见</li>
+<li>isUserIntereactEnabled = false。</li>
+<li>透明度小于0.01。</li>
+</ol>
+<p>若pointInside就继续递归子控件，不为空则回传，递归完成仍为空则回传自己。<br>
+UITouch事件最终会得到一个响应者，但该响应者身份不会注册于firstResponder。</p>
+<h4><span id="响应者链">响应者链</span></h4>
+<p>找到响应者Responder后，会执行Responder对其的处理，若Responder未注册任何处理，则会向上传递给Responder的父视图。<br>
+上抛至UIApplication仍无处理，则该UITouch事件从Loop中剔除。</p>
+<p>Tip1: 上抛过程无法重写，只能被截获，向父视图传递。</p>
+<p>Tip2: 定义过程可类比addSubview和addGesture。</p>
+<p>Tip3: 处理阶段不会回退到上抛阶段。</p>
+<h2><span id="截断">截断</span></h2>
+<p>Tip1: 第一个执行的函数是Gesture的shouldReceive，此时可以通过return false或者变更possible-&gt;false截断。</p>
+<p>Tip2: 然后会执行Gesture的shouldBegin，require和beRequired均依赖于此。</p>
+<p>Tip3: 然后State会被置于began，执行touchBegan，自定义手势由此生成响应。</p>
+<p>Tip4: iOS默认会阻塞手势(<code>shouldRecognizeSimultaneouslyWithOtherGestureRecognizer</code>及Event<code>cancelsTouchesInView</code>)</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/01/19/iOSFramework封装/" data-toggle="tooltip" data-placement="top" title="[Swift] Swift Framework的封装">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2017/12/20/Swift说明/" data-toggle="tooltip" data-placement="top" title="[Swift] Swift语法进阶说明<一>">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
             
-                <!-- Main Content -->
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
 
-
-<div class="post-preview">
-
-    <a href="/2018/01/19/iOSFramework封装/">
-        <h2 class="post-title">
-            [Swift] Swift Framework的封装
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            Swift Framework的封装
-1. 简介
-1.1 环境
-
-系统环境: MacOS Sierra v10.12.5 + Xcode 9 beta2 + Swift 3.2
-工具包: cocoapods 1.3.0 + cocoapods-packager 1.5.0插件
-
-1sudo gem install cocoapods-packager
-
-工程环境: Swift/OC工程项目，......
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Swift响应链</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">宏观执行顺序</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.0.1.</span> <span class="toc-nav-text">输入</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.0.1.1.</span> <span class="toc-nav-text">Test 1</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.0.2.</span> <span class="toc-nav-text">UITouch</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.0.3.</span> <span class="toc-nav-text">响应者链</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">截断</span></a></li></ol></li></ol>
+        
         </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Luis Gin on
-            2018-01-19
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Tech" title="Tech">Tech</a>
-            
-              <a href="/tags/#Swift" title="Swift">Swift</a>
-            
-        </div>
+      </aside>
     
 
-</div>
-<hr>
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
 
-<div class="post-preview">
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Tech" title="Tech">Tech</a>
+                        
+                          <a class="tag" href="/tags/#Swift" title="Swift">Swift</a>
+                        
+                    </div>
+                </section>
+                
 
-    <a href="/2018/01/15/Swift响应链/">
-        <h2 class="post-title">
-            [Swift] Swift响应链
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            Swift响应链
-对iOS环境中的响应顺序做了简单的研究。
-宏观执行顺序
-输入
-对于每一个应用而言，输入大致包括以下四种。
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
 
-UITouch最常见的触摸事件
-UIMotion传感器事件
-OtherExtension扩展输入，必然存在于同一容器Container中(该容器定义可参见Target-Capability中的App-group)，常见的有key-board和Assitive-Touc......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Luis Gin on
-            2018-01-15
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Tech" title="Tech">Tech</a>
-            
-              <a href="/tags/#Swift" title="Swift">Swift</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2017/12/20/Swift说明/">
-        <h2 class="post-title">
-            [Swift] Swift语法进阶说明<一>
-        </h2>
-        <h3 class="post-subtitle">
-            Swift Chapter I
-        </h3>
-        <div class="post-content-preview">
-            Swift说明
-Background
-Compiler Environment:
-Xcode_Version_9.0(9A235) &amp; Swift4  
-
-Running Environment:
-MacOS-Sierra_v10.12.6 &amp; iOS11.1  
-
-Last Modified:
-2017.10.20
-
-Introduction
-Swift作为一门专为iOS设......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Luis Gin on
-            2017-12-20
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Tech" title="Tech">Tech</a>
-            
-              <a href="/tags/#Swift" title="Swift">Swift</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2017/12/20/CocoaPods全解析/">
-        <h2 class="post-title">
-            CocoaPods全解析
-        </h2>
-        <h3 class="post-subtitle">
-            关于iOS包管理工具Cocoapods的全方位指北.
-        </h3>
-        <div class="post-content-preview">
-            CocoaPods全解析
-安装CocoaPods
-cocoaPos和packageManager是最常用的iOS组件化管理工具。其中cocoaPods以Ruby作为源开发的一款工具，可以通过Gem或homebrew进行安装。MacOS自带Gem工具，通常情况下可以直接用Gem进行安装和本地管理。
-
-Gem Search用于搜索远端的库。
-gem search cocoaPods
-Gem In......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Luis Gin on
-            2017-12-20
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Tech" title="Tech">Tech</a>
-            
-              <a href="/tags/#Tools" title="Tools">Tools</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-
-
-<!-- Pager -->
-
-<ul class="pager">
-    
-    
-</ul>
-
-
-
-                <!-- 如果开启评论功能 -->
+                    
+                        <li><a href="https://www.jianshu.com/u/81e89cad97fe" target="_blank">Mr.Island</a></li>
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">It Helps SEO</a></li>
+                    
+                </ul>
                 
             </div>
-
-          <!-- Sidebar Container -->
-<div class="
-    col-lg-3 col-lg-offset-0
-    col-md-3 col-md-offset-0
-    col-sm-12
-    col-xs-12
-    sidebar-container
-">
-    
-        <!-- Featured Tags -->
-
-<section>
-    <!-- no hr -->
-    <h5><a href="/tags/">FEATURED TAGS</a></h5>
-    <div class="tags">
-        
-            
-            <a href="/tags/#Tech" title="Tech" rel="4">Tech</a>
-            
-        
-            
-            <a href="/tags/#Swift" title="Swift" rel="3">Swift</a>
-            
-        
-            
-        
+        </div>
     </div>
-</section>
+</article>
 
-        <hr>
-    
-        <!-- Short About -->
-<section class="visible-md visible-lg">
-    <h5><a href="/about/">ABOUT ME</a></h5>
-    <div class="short-about">
 
-        
-            <img id = "avatar_pic" src="/img/ironman-draw.png" />
-        
 
-        
-            <p>Welcome to my archive, i&#39;m Luis Gin</p>
-        
 
-        <!-- SNS Link -->
-        <ul class="list-inline">
-            
-            
-            
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "http://yoursite-url/2018/01/15/Swift响应链/";
+    var disqus_url = "http://yoursite-url/2018/01/15/Swift响应链/";
 
-            
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
 
-            
-                <li>
-                    <a target="_blank" href="https://www.facebook.com/MrIsland">
-                        <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
-                        </span>
-                    </a>
-                </li>
-            
 
-            
-                <li>
-                    <a target="_blank"  href="https://github.com/LuisGin">
-                        <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                        </span>
-                    </a>
-                </li>
-            
-            
-            
-            
-                <li>
-                    <a target="_blank"  href="https://www.linkedin.com/in/Hanqing Ding">
-                        <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
-                        </span>
-                    </a>
-                </li>
-            
-        </ul>
-    </div>
-</section>
-        <hr>
-    
-        
-  <h5>RECENT POSTS</h3>
-  <div class="widget">
-    <ul>
-      
-        <li>
-          <a href="/2018/01/19/iOSFramework封装/">[Swift] Swift Framework的封装</a>
-        </li>
-      
-        <li>
-          <a href="/2018/01/15/Swift响应链/">[Swift] Swift响应链</a>
-        </li>
-      
-        <li>
-          <a href="/2017/12/20/Swift说明/">[Swift] Swift语法进阶说明&lt;一&gt;</a>
-        </li>
-      
-        <li>
-          <a href="/2017/12/20/CocoaPods全解析/">CocoaPods全解析</a>
-        </li>
-      
-    </ul>
-  </div>
 
-        <hr>
-    
-        <!-- Friends Blog -->
 
-<h5>FRIENDS</h5>
-<ul class="list-inline">
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
 
-    
-        <li><a href="https://www.jianshu.com/u/81e89cad97fe" target="_blank">Mr.Island</a></li>
-    
-        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
-    
-        <li><a href="http://huangxuan.me" target="_blank">Hux Blog</a></li>
-    
-        <li><a href="#" target="_blank">It Helps SEO</a></li>
-    
-</ul>
-
-        <hr>
-    
-</div>
-
-        
-    </div>
-</div>
 
 
     <!-- Footer -->

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          [Swift] Swift Framework的封装 - Articles | LuisGin.Tech.io
+        
+    </title>
+
+    <link rel="canonical" href="http://yoursite-url/2018/01/19/iOSFramework封装/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('Demo.png')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/BeanTechSign-white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Tech" title="Tech">Tech</a>
+                            
+                              <a class="tag" href="/tags/#Swift" title="Swift">Swift</a>
+                            
+                        </div>
+                        <h1>[Swift] Swift Framework的封装</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by Luis Gin on
+                            2018-01-19
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">T-Land of Luis_Gin</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1><span id="swift-framework的封装">Swift Framework的封装</span></h1>
+<h2><span id="1-简介">1. 简介</span></h2>
+<h3><span id="11-环境">1.1 环境</span></h3>
+<ul>
+<li>系统环境: MacOS Sierra v10.12.5 + Xcode 9 beta2 + Swift 3.2</li>
+<li>工具包: cocoapods 1.3.0 + cocoapods-packager 1.5.0插件</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gem install cocoapods-packager</span><br></pre></td></tr></table></figure>
+<ul>
+<li>工程环境: Swift/OC工程项目，转换为.framework形式的SDK</li>
+<li>更新日期: 2017-08-04</li>
+</ul>
+<h3><span id="12-目的">1.2 目的</span></h3>
+<p>传统意义上的framework开发会选择Xcode建立新Project，选择Cocoa Touch Framework，用Test Project进行调试，再进行编译变量设置，然后生成库文件。但是开发阶段开发人员往往不会建立Framework类型的Project，本文将分别叙述CocoaPods和传统开发下的区别，及如何对包含第三方frame库，cocoapods组件化开发，Swift/OC相互调用复杂的工程打包。</p>
+<h2><span id="2-操作步骤">2. 操作步骤</span></h2>
+<h3><span id="21-利用cocoapods打包">2.1 利用CocoaPods打包</span></h3>
+<p>首先需要明确的是该打包方式生成的.framework来源于.podspec指定的source，默认情况下仅包含$SRCROOT/Classes下的文件。<br>
+项目很可能是由cocoapods</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pod lib create YourLibName</span><br></pre></td></tr></table></figure>
+<p>创建的Pods组件。</p>
+<p>或是由</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pod lib lint</span><br></pre></td></tr></table></figure>
+<p>从传统工程转换而成的cocoapods工程。<br>
+核心文件为<code>YourLibName.podspec</code>文件，该文件原本是用于Pods组件进行资源管理，项目设置，以及生成cocoapods索引。pods-packager这一工具可以自动化地分析组件内容并生成.framework包。</p>
+<p>进行完2.1.1中细化的.podspec文件设置后，可以通过pods-packager提供的单步命令行工具</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pod packager YourLibName.podspec [--library] --force</span><br></pre></td></tr></table></figure>
+<p>进行打包。注: --library为可选的&quot;以.a格式打包&quot;选项，–force强制覆盖。</p>
+<h4><span id="211-podspec详解">2.1.1 PodSpec详解</span></h4>
+<p>所有’#'标示对下一行的注解，打包时可删除</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">Pod::Spec.new <span class="keyword">do</span> |s|</span><br><span class="line">\# 组件名，除了git clone命令访问的是真实文件夹的名字外，其他所有情况下都会以下字段作为name，不建议修改</span><br><span class="line">s.name             = <span class="string">'iOS_CloudSDK'</span></span><br><span class="line">\# 版本号</span><br><span class="line">s.version          = <span class="string">'0.1.0'</span></span><br><span class="line">\# 标签，可自定义，可pod search</span><br><span class="line">s.summary          = <span class="string">'功能组件'</span></span><br><span class="line"></span><br><span class="line">\# 内容描述，pod search命令支持模糊搜索，可尽量罗列关键词</span><br><span class="line">s.description      = &lt;&lt;-DESC</span><br><span class="line">Some description, 内容描述</span><br><span class="line">DESC</span><br><span class="line"></span><br><span class="line">\# 主页地址，PodSearch时显示，填www.baidu.com也无影响，地址若不存在则pod lint命令会抛警告</span><br><span class="line">s.homepage         = <span class="string">'http://somehost/iOS/iOS_CloudSDK'</span></span><br><span class="line">\# 证书地址，该文件务必保证存在，且与.podspec文件在同一层目录</span><br><span class="line">s.license          = &#123; :type =&gt; <span class="string">'MIT'</span>, :file =&gt; <span class="string">'LICENSE'</span> &#125;</span><br><span class="line">\# 作者署名</span><br><span class="line">s.author           = &#123; <span class="string">'LuisGin'</span> =&gt; <span class="string">'dinghanqing@gmail.com'</span> &#125;</span><br><span class="line">\# 资源地址，无论是pod命令还是git命令都会调度这一地址，并且这一地址也同时会拼接在后文属性的uri前。</span><br><span class="line">s.source           = &#123; :git =&gt; <span class="string">'http://192.168.0.1/iOS/iOS_CloudSDK.git'</span>, :tag =&gt; s.version.to_s &#125;</span><br><span class="line">\# 其他非必要字段 s.social_media_url／s.screen_shot_url 等提供给用户的可选参照链接</span><br><span class="line"></span><br><span class="line">\# iOS_target版本，引用了该组件的项目Setting中的目标不得低于该版本号。</span><br><span class="line">\# 与其类似的还有许多如 s.platform, s.requires_arc 等字段，其目的都是为了覆盖Project Setting或Podfile中的属性值。</span><br><span class="line">s.ios.deployment_target = <span class="string">'8.0'</span></span><br><span class="line"></span><br><span class="line">\# 以下Source相关的语法构成近似，都为单引号圈示的正则表达式或绝对名称，其真实文件会拼接上文的s.source中的uri，若需要多个值，则用['xx','xxx']这样的数组表示，或&#123;key =&gt; 'xx', key2 =&gt; 'xxx'&#125;的预定义字典，也可以在文件最后写更复杂的宏</span><br><span class="line">\# 重点，编译的可执行文件，会以二进制格式被封入.framework</span><br><span class="line">s.source_files = <span class="string">'iOS_CloudSDK_CPN/Classes/**/*'</span></span><br><span class="line"></span><br><span class="line">\# 可选，打包的资源文件，会被封入.bundle</span><br><span class="line">s.resource_bundles = &#123;</span><br><span class="line"><span class="string">'iOS_CloudSDK_CPN'</span> =&gt; [<span class="string">'iOS_CloudSDK_CPN/Classes/LoginRelatedControllers/*.xib'</span>, <span class="string">'iOS_CloudSDK_CPN/Classes/PersonalDashBoard/*.xib'</span>, <span class="string">'iOS_CloudSDK_CPN/Assets/*.png'</span>, <span class="string">'iOS_CloudSDK_CPN/Assets/*.txt'</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">\#</span><br><span class="line">s.public_header_files = <span class="string">'Pod/Classes/**/*.h'</span></span><br><span class="line">\# 可选</span><br><span class="line">s.frameworks = <span class="string">'UIKit'</span>, <span class="string">'MapKit'</span></span><br><span class="line">\# 可选</span><br><span class="line">s.dependency <span class="string">'Alamofire'</span>, <span class="string">'~&gt; 4.5'</span></span><br></pre></td></tr></table></figure>
+<h3><span id="22-传统方式方式打包">2.2 传统方式方式打包</span></h3>
+<h3><span id="23-利用xcode自身的编译product获取">2.3 利用Xcode自身的编译Product获取</span></h3>
+<p>cocoapods开发中的xcworkspace(替代Xcode xcproject)，Build运行时会在Xcode中的YourLibName/Pods/Product目录下生成.framework文件<br><img src="./pic1.png" alt=""><br>
+右键点击可以获取实际目录<br><img src="./pic2.png" alt=""><br>
+其中，根据Build的Schema不同，最多可能有四种适用不同的framework，分别对应Debug和Release下的真机和模拟器。![][pic3]<br>
+而事实上，如果对Xcode的项目引用方式有深入了解的话</p>
+<h3><span id="24-其他">2.4 其他</span></h3>
+<h4><span id="241-debug和release下的framework合并为universal">2.4.1 Debug和Release下的.framework合并为Universal</span></h4>
+<h4><span id="242-图片等资源引用">2.4.2 图片等资源引用</span></h4>
+<h4><span id="243-pod提交前步骤">2.4.3 Pod提交前步骤</span></h4>
+<p>确保完成<code>pod install</code> 或 <code>pod update</code> 后项目能正常通过Xcode中的<code>Build</code>或<code>Compile</code> <br><br>
+确保完成<code>git add .</code> -&gt; <code>git commit</code> -&gt; <code>git tag -a 版本号 -m 版本介绍</code> -&gt; <code>git push</code>的Git提交操作  <br><br>
+确保<code>pod lib lint YourLibName.podspec [-only-errors] --verbose --allow-warnings</code>不出现红字Error  <br><br>
+若为远程库<code>git push --tags</code>及<code>pod repo push</code>成功将项目推至远程仓库</p>
+<h2><span id="边界测试">边界测试</span></h2>
+<h2><span id="其他">其他</span></h2>
+<h3><span id="交流联系">交流联系</span></h3>
+<p><img src="./wechat.png" alt="">  <br><br>
+Author:  Hanqing  <br><br>
+E-mail:  <a href="mailto:LuisGin93@163.com" target="_blank" rel="noopener">LuisGin93@163.com</a>  <br><br>
+GitHub:    <a href="http://github.com/HqLuisGin" target="_blank" rel="noopener">github.com/HqLuisGin</a></p>
+<h3><span id="相关链接">相关链接</span></h3>
+<ol>
+<li>Pods-Packager 官方Git - <a href="https://github.com/CocoaPods/cocoapods-packager" target="_blank" rel="noopener">https://github.com/CocoaPods/cocoapods-packager</a></li>
+</ol>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/01/15/Swift响应链/" data-toggle="tooltip" data-placement="top" title="[Swift] Swift响应链">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Swift Framework的封装</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">1. 简介</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.1.</span> <span class="toc-nav-text">1.1 环境</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.2.</span> <span class="toc-nav-text">1.2 目的</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">2. 操作步骤</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.1.</span> <span class="toc-nav-text">2.1 利用CocoaPods打包</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.1.1.</span> <span class="toc-nav-text">2.1.1 PodSpec详解</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.2.</span> <span class="toc-nav-text">2.2 传统方式方式打包</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.3.</span> <span class="toc-nav-text">2.3 利用Xcode自身的编译Product获取</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.4.</span> <span class="toc-nav-text">2.4 其他</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.4.1.</span> <span class="toc-nav-text">2.4.1 Debug和Release下的.framework合并为Universal</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.4.2.</span> <span class="toc-nav-text">2.4.2 图片等资源引用</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.4.3.</span> <span class="toc-nav-text">2.4.3 Pod提交前步骤</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">边界测试</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">其他</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.4.1.</span> <span class="toc-nav-text">交流联系</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.4.2.</span> <span class="toc-nav-text">相关链接</span></a></li></ol></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Tech" title="Tech">Tech</a>
+                        
+                          <a class="tag" href="/tags/#Swift" title="Swift">Swift</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.jianshu.com/u/81e89cad97fe" target="_blank">Mr.Island</a></li>
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">It Helps SEO</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "http://yoursite-url/2018/01/19/iOSFramework封装/";
+    var disqus_url = "http://yoursite-url/2018/01/19/iOSFramework封装/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/MrIsland">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/LuisGin">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/Hanqing Ding">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Luis Gin 2018 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://yoursite-url/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="http://yoursite-url/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
