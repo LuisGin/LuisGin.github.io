@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Beantech | 豆科技
+        
+    </title>
+
+    <link rel="canonical" href="http://yoursite-url/2017/10/22/CocoaPods全解析/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('undefined')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/BeanTechSign-white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                        </div>
+                        <h1></h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by Luis Gin on
+                            2017-10-22
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Your Title</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1><span id="cocoapods全解析">CocoaPods全解析</span></h1>
+<h2><span id="安装cocoapods">安装CocoaPods</span></h2>
+<p>cocoaPos和packageManager是最常用的iOS组件化管理工具。其中cocoaPods以Ruby作为源开发的一款工具，可以通过Gem或homebrew进行安装。MacOS自带Gem工具，通常情况下可以直接用Gem进行安装和本地管理。</p>
+<ol>
+<li>Gem Search用于搜索远端的库。<br>
+<code>gem search cocoaPods</code></li>
+<li>Gem Install用于安装所需的库，可以用<code>--version</code>指定版本号。<br>
+<code>gem install cocoaPods</code>, <code>gem install cocoaPods --version=1.3.1</code></li>
+<li>Gem List用于陈列本地已安装库，该命令会罗列附属的cocoaPods库及其版本号。<br>
+<code>gem list cocoaPods</code></li>
+<li>Gem Uninstall用于卸载本地已安装库，同样可以<code>--version</code>指定版本。<br>
+<code>gem uninstall cocoaPods</code>， <code>gem uninstall cocoaPods --version=1.2.1</code></li>
+<li>Gem Update用于进行更新，该命令不会自动卸载旧版本。<br>
+<code>gem update cocoaPods</code></li>
+</ol>
+<p>通过Gem可以搜索到远端有许多cocoaPods的插件，诸如cocoapods-packager和cocoapods-trunk(前者可以命令行单步生成.framework，后者可以单步生成.a)，由于Xcode更新等原因，插件的管理有时候需要手动执行。</p>
+<h2><span id="创建pods索引">创建Pods索引</span></h2>
+<p>CocoaPods索引目录以Git仓库托管，所以创建私有目录要求绑定远端的一个.git库。完成绑定后，无论远端的文件层级结构是什么，cocoaPods都以一级目录作为索引目录。</p>
+<ol>
+<li>
+<p>创建一个用于管理所有CocoaPods库的Git库。该步原理完全参照git原理，remote可以为本地路径，该路径不存在或访问级别受限可能会导致部分pod命令无法执行。<br>
+<code>git create MyPodSpec</code></p>
+</li>
+<li>
+<p>pod创建本地索引并指向该remote仓库。</p>
+</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pod repo add [Local Repo Name] [Remote Http URL |or| Local Route Path]</span><br><span class="line"><span class="meta">#</span> 范例如下</span><br><span class="line">pod repo add MySpecs https://192.168.137.188/MySpecs.git</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>创建成功后，可以在<code>~/.cocoapods/repos/</code>目录下检索到本地库。该目录本身即为单纯的.git仓库，当pod命令遇到问题时可以考虑以git命令强制更新。</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd ~/.cocoapods/repos/MyLabRepo</span><br><span class="line"><span class="meta">#</span> 可以直接以git命令操控该文件夹，push origin master可以无条件覆盖</span><br><span class="line">git log</span><br><span class="line">git commit</span><br><span class="line">git push origin master</span><br></pre></td></tr></table></figure>
+<h2><span id="pod仓库管理">Pod仓库管理</span></h2>
+<h4><span id="pod-repo命令">Pod repo命令</span></h4>
+<p>除了常用操控pod project的命令外，pod还包含pod repo命令用于直接操控pod本地仓库。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 添加新repo本地仓库，本地可以有多个repo。</span><br><span class="line">pod repo add [repo Name] [remote path]</span><br><span class="line"><span class="meta">#</span> 校验本地repo下的所有spec文件</span><br><span class="line">pod repo lint [repo Name]</span><br><span class="line"><span class="meta">#</span> 陈列本地仓库，常用该命令检查本地仓库路径及远端绑定地址</span><br><span class="line">pod repo list</span><br><span class="line"><span class="meta">#</span> 删除本地仓库</span><br><span class="line">pod repo remove [repo Name]</span><br><span class="line"><span class="meta">#</span> 更新仓库，其实该步完全等同于进入repo文件夹后执行git pull origin master</span><br><span class="line">pod repo update</span><br></pre></td></tr></table></figure>
+<h4><span id="pod-cache命令">Pod cache命令</span></h4>
+<p>Pod会在仓库附属文件夹下建立缓存pod cache，缓存的管理需要用户手动进行。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 陈列本地所有的pod组件</span><br><span class="line">pod cache list</span><br><span class="line"><span class="meta">#</span> 清楚所有pod缓存</span><br><span class="line">pod cache clean --all</span><br><span class="line"><span class="meta">#</span> 删除某一项目的缓存，若本地存在多个version的缓存，之后会提示选择版本序号</span><br><span class="line">pod cache clean [project name]</span><br></pre></td></tr></table></figure>
+<h4><span id="运作原理">运作原理</span></h4>
+<p>分析以下两条pod常用命令的异同</p>
+<p><code>pod install</code><br>
+<code>pod update --no-repo-update</code></p>
+<p><code>install</code>与<code>update</code>的区别在于是否就组件包进行大版本的更替，其中<code>install</code>只会对形如<code>1.1.1.1</code>最后一位的数值变动进行更新，而<code>update</code>会尽可能地更新至最新版本，两者的区别会在项目管理中详述。<br>
+在版本号已为最新的情况下，两者的运作效果是完全一致的。<br>
+当执行pod命令时，cocoaPods会顺序执行以下的最长动作链。</p>
+<ol>
+<li>pod repo update 更新仓库
+<ul>
+<li>-&gt; 若执行的是install或–no-repo-update则跳过此步</li>
+<li>cd [.cocoaPods path]</li>
+<li>git pull origin master</li>
+</ul>
+</li>
+<li>pod check PodLock 检查比对podfile与podlock文件中的版本号
+<ul>
+<li>-&gt; 若执行的是install并且lock一致则跳出</li>
+<li>-&gt; 若版本号已为最新则跳出</li>
+</ul>
+</li>
+<li>pod cache search 查询缓存
+<ul>
+<li>-&gt; 若cache中存在最新版本的cache，则直接使用本地缓存的文件，该情况有可能导致，当远端不更新版本号而是tag了一份新代码的时候，本地pod只检查缓存而不检查缓存和云端是否一致。</li>
+</ul>
+</li>
+<li>pod repo search 查询索引
+<ul>
+<li>-&gt; 若索引不存在则跳出</li>
+<li>查询索引时永远只会检查本地的.cocoapods目录，因此若在中途手动修改了.cocoapods文件夹，pod命令依然会按照本地的状况执行，该策略可用于当某一.podspec文件有误而云端未及时更新(或单纯进行本地测试时)，仅需要手动将.podspec文件更新至索引目录即可完美执行pod命令。</li>
+</ul>
+</li>
+<li>git 安装
+<ul>
+<li>git clone [project name] -&gt; 当检索到有需要安装的新项目时，会在cache中下载一份项目代码，而后按照从本地索引.podspec文件中描述的策略，安装到XcodeProject下。项目扩展原理完全借助了iOS提供的XCBuild命令，原则上cocoaPods工具只是.podspec描述文件里的配置项转换成了XCBuild命令并shell执行。</li>
+</ul>
+</li>
+</ol>
+<p>了解原理后我们可以发现，在该顺序过程中，每一步理论上都可以跨越cocoaPods的机制手动执行，在真实环境中可以适度改变索引、仓库、缓存等以达到强制执行的效果。<br>
+注：手动变更而未保存的.cocoapods目录无法通过pod update也是因为git要求目录下所有文件stage后才能进行pull操作。</p>
+<h2><span id="pod项目管理">Pod项目管理</span></h2>
+<h3><span id="step1-创建pod工程">Step.1 - 创建Pod工程</span></h3>
+<p>pod项目可以通过pod直接进行建议的空模版创建</p>
+<p><code>pod lib create [项目名]</code><br>
+过程中有默认选项需要用户选择</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 选择语言</span><br><span class="line">What language do you want to use?? [ Swift / ObjC ]</span><br><span class="line"><span class="meta">#</span> 是否包含Demo</span><br><span class="line">Would you like to include a demo application with your library?</span><br><span class="line"><span class="meta">#</span> 测试所用的框架，添加框架可以通过gem或Xcode扩展</span><br><span class="line">Which testing frameworks will you use? [ Specta / Kiwi / None ]</span><br><span class="line"><span class="meta">#</span> 是否添加测试，选择YES则会在workspace下创建XCTest和XCUITest两个project</span><br><span class="line">Would you like to do view based testing? [ Yes / No ]</span><br><span class="line"><span class="meta">#</span> 是否添加前缀，非空则会将该命名添加至所有命名空间之上</span><br><span class="line">What is your class prefix?</span><br></pre></td></tr></table></figure>
+<p>也可以通过已有的Xcode项目转化而来</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 确保主工程目录为git目录</span><br><span class="line">git init</span><br><span class="line"><span class="meta">#</span> 在根目录下进行pod创建，会添加.podfile文件</span><br><span class="line">pod lib init</span><br><span class="line"><span class="meta">#</span> 验证.podspec文件</span><br><span class="line">pod lib lint</span><br></pre></td></tr></table></figure>
+<h3><span id="step2-pod工程开发">Step.2 - Pod工程开发</span></h3>
+<p>添加新文件有两种方式，通过Xcode直接添加，和通过文件+pod添加。<br>
+通过Xcode添加时需要注意，选择所属的project时要选择Pods而不能选择主工程。<br>
+如果项目本身是用cocoaPods创建的话，那么也可以直接将文件粘贴至<code>/libName/Classes</code>文件夹下，然后回到<code>Example</code>目录执行<code>pod install</code>。<br>
+所有引入的代码都会正确陈列在Xcode索引中的<code>-&gt; Pods -&gt; Development</code>目录下。</p>
+<h3><span id="step3-上传到远程git库">Step.3 - 上传到远程Git库</span></h3>
+<p>完成工程开发后，需要将整个工程上传到远程库。</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="keyword">add</span><span class="bash"> .</span></span><br><span class="line"><span class="bash">git commit -s -m <span class="string">"初始化Color库"</span></span></span><br><span class="line"><span class="bash"><span class="comment">#添加远端仓库</span></span></span><br><span class="line"><span class="bash">git remote add origin http://192.168.137.188/HisenseColorLib.git</span></span><br><span class="line"><span class="bash">git push origin master</span></span><br></pre></td></tr></table></figure>
+<p>而后打Tag标注便于引用</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="keyword">tag</span> <span class="title">-m</span> <span class="string">"first release"</span> <span class="string">"0.1.0"</span> <span class="comment">#打上标签，这个很重要</span></span><br><span class="line">git push --tags     <span class="comment">#推送tag到远端仓库</span></span><br></pre></td></tr></table></figure>
+<p>注：对于git而言并不区分remote路径究竟是http地址还是本机绝对路径，cocoaPods原理基于git因此同样支持本地绝对路径。</p>
+<h3><span id="step4-编辑podspec文件">Step.4 - 编辑podspec文件</span></h3>
+<p>cocoaPods的整个运作都依赖于podspec文件，因此重中之重是正确配置该文件，常用标签的标识意义都陈列如下，该文件不仅可以包含标签，也可以包含条件编译函数、扩展配置项等等。</p>
+<p>由于license配置等原因，建议保证homepage即为项目git根目录，并且确保在该目录下包含.MIT文件。</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">Pod::Spec.<span class="keyword">new</span> <span class="keyword">do</span> |s|</span><br><span class="line">  # 名字</span><br><span class="line">  s.name             = <span class="string">'iOS_CloudSDK_CPN'</span></span><br><span class="line">  # 版本号</span><br><span class="line">  s.<span class="keyword">version</span>          = <span class="string">'2.1.0'</span></span><br><span class="line">  # 概述</span><br><span class="line">  s.summary          = <span class="string">'业务层接口'</span></span><br><span class="line">  # 描述</span><br><span class="line">  s.description      = &lt;&lt;-DESC</span><br><span class="line">        包含HiCloud基础业务接口，各应用接口、登录模块、个人中心模块，及统一日志策略。</span><br><span class="line">                       DESC</span><br><span class="line">  # 主页地址，必选，并且该地址必须存在</span><br><span class="line">  s.homepage         = <span class="string">'http://192.168.137.188:8088/iOS/iOS_CloudSDK'</span></span><br><span class="line">  # 截图地址，可选</span><br><span class="line">  s.screenshots     = <span class="string">'www.example.com/screenshots_1'</span>, <span class="string">'www.example.com/screenshots_2'</span></span><br><span class="line">  # 协议，必选，建议写法会直接检索homepage的一级目录</span><br><span class="line">  s.license          = &#123; :<span class="built_in">type</span> =&gt; <span class="string">'MIT'</span>, :<span class="keyword">file</span> =&gt; <span class="string">'LICENSE'</span> &#125;</span><br><span class="line">  # 作者，必选，信息会暴露给pod <span class="built_in">search</span></span><br><span class="line">  s.author           = &#123; <span class="string">'luisgin'</span> =&gt; <span class="string">'LuisGin93@163.com'</span> &#125;</span><br><span class="line">  # 源文件，即pod会执行的git clone地址，请确保该地址可以正常clone，子标签也可以按需选用:path(绝对路径)、:commit(版本号而非<span class="keyword">tag</span>)、:branch(指定分支)等等</span><br><span class="line">  s.<span class="keyword">source</span>           = &#123; :git =&gt; <span class="string">'http://192.168.137.188:8088/iOS/iOS_CloudSDK.git'</span>, :<span class="keyword">tag</span> =&gt; s.<span class="keyword">version</span>.to_s &#125;</span><br><span class="line">  # 传媒地址，可选</span><br><span class="line">  s.social_media_url = <span class="string">'https://www.hisense.com'</span></span><br><span class="line">  # 安装设备最小iOS版本，非必选，可以在pod <span class="keyword">file</span>或xcode setting中变更</span><br><span class="line">  s.ios.deployment_target = <span class="string">'9.0'</span></span><br><span class="line"></span><br><span class="line">  # 代码文件，必选，请指定所有的可编译文件，路径可自定义，非可编译文件(仅对Xcode而言)都认为是资源。其中**/*表示遍历子文件夹</span><br><span class="line">  s.source_files = [<span class="string">'iOS_CloudSDK_CPN/Classes/**/*.swift'</span>, <span class="string">'iOS_CloudSDK_CPN/Classes/**/*.h'</span>, <span class="string">'iOS_CloudSDK_CPN/Classes/**/*.m'</span>]</span><br><span class="line">  </span><br><span class="line">  # 资源文件，可选，.storyboard|.xib|.png|.html|.js|.<span class="keyword">python</span>|.jar|.txt|.avi|.plist等等非可编译文件都认为是资源，基本上除了.h.swift.<span class="keyword">c</span>.gcc暨OC\Swift\C\C++之外的文件都通过该处索引。</span><br><span class="line">  s.resource_bundles = &#123;</span><br><span class="line">    <span class="string">'iOS_CloudSDK_CPN'</span> =&gt; [<span class="string">'iOS_CloudSDK_CPN/Classes/**/*.xib'</span>, <span class="string">'iOS_CloudSDK_CPN/Assets/*.png'</span>, <span class="string">'iOS_CloudSDK_CPN/Assets/*.txt'</span>]</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  # required framework要求的动态库，可选，并且不会真实加载，要求手动执行</span><br><span class="line"># s.vendored_frameworks = <span class="string">'iOS_CloudSDK_CPN/Resources/**/*.framework'</span></span><br><span class="line">  # required framework要求的静态库，可选，并且不会真实加载，要求手动执行</span><br><span class="line"># s.vendored_libraries = <span class="string">'iOS_CloudSDK_CPN/Resources/**/*.a'</span></span><br><span class="line">  # frameworks系统库，不会被真实引入</span><br><span class="line">  s.frameworks = <span class="string">'UIKit'</span>, <span class="string">'MapKit'</span></span><br><span class="line">  # frameworks可选系统库，不会被真实引入，并且不要求运行时一定引入</span><br><span class="line">  s.weak_frameworks = <span class="string">'CoreTelephony'</span>, <span class="string">'Security'</span></span><br><span class="line">  # 开放暴露给外部的公共.h文件，可选，可以自行在Xcode Setting里设置，另只有Swift库强制要求从此处暴露，OC的库默认会暴露所有.h头文件</span><br><span class="line"># s.public_header_files = <span class="string">'Pod/Classes/**/*.h'</span></span><br><span class="line"></span><br><span class="line">  # 第三方依赖关系，会被真实引入，可以做指定版本号等操作。</span><br><span class="line">  s.dependency = &#123; <span class="string">'CryptoSwift'</span> &#125;</span><br><span class="line">  s.dependency <span class="string">'Kingfisher'</span></span><br><span class="line">  s.dependency <span class="string">'Alamofire'</span></span><br><span class="line">  s.dependency <span class="string">'SwiftyJSON'</span></span><br><span class="line"></span><br><span class="line">  s.dependency <span class="string">'PopView'</span></span><br><span class="line">  s.dependency <span class="string">'iOS_Networking_CPN'</span>, <span class="string">'~&gt; 0.2.1'</span></span><br><span class="line"></span><br><span class="line">  # target设置，可以在这里设置pod里该项目的任何一个xcode配置项</span><br><span class="line"># s.pod_target_xcconfig = &#123; <span class="string">'SWIFT_VERSION'</span> =&gt; <span class="string">'3.0'</span> &#125;</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<h3><span id="step4-验证上传specs文件">Step.4 - 验证上传Specs文件</span></h3>
+<p>确保该.podspec文件可以正常通过cocoaPods验证，若要执行此步需要保证.podspec在根目录下。</p>
+<p><code>pod lib lint</code></p>
+<p>确保项目工程正确</p>
+<p><code>pod install</code><br>
+<code>xcbuild</code> 或 <code>xcrun</code></p>
+<p>向仓库提交时cocoaPods会再进行一次校验、</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">pod</span> <span class="selector-tag">repo</span> <span class="selector-tag">push</span> <span class="selector-attr">[Repo名]</span> <span class="selector-attr">[podspec 文件名字]</span></span><br><span class="line"><span class="selector-tag">pod</span> <span class="selector-tag">repo</span> <span class="selector-tag">push</span> <span class="selector-tag">MyLabRepo</span> <span class="selector-tag">MyPodName</span><span class="selector-class">.podspec</span></span><br></pre></td></tr></table></figure>
+<p>允许忽视项目中的警告，及打印详细信息可以用以下附加参数</p>
+<p><code>pod repo push [Repo名] [podspec 文件名字] --allow-wanings --verbose</code></p>
+<h3><span id="setp5-在项目中使用">Setp.5 - 在项目中使用</span></h3>
+<p>在Podfile中增加以下代码</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pod <span class="string">'MyPodName'</span> <span class="symbol">:tag</span> =&gt; <span class="string">'0.1.0'</span></span><br></pre></td></tr></table></figure>
+<p>如果引入了非官方的仓库，还需要标注</p>
+<p><code>source 'https://github.com/CocoaPods/Specs.git'</code><br>
+<code>source 'http://192.168.137.188:8088/iOS/PodSpecs.git'</code></p>
+<p>然后执行<code>pod instal</code>或<code>pod update</code>即能正确下载组件。</p>
+<h2><span id="问题">问题</span></h2>
+<h3><span id="搜不到pod-search">搜不到pod search</span></h3>
+<p>解决方法:输入下面命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm ~/Library/Caches/CocoaPods/search_index.json</span><br></pre></td></tr></table></figure>
+<h3><span id="error">error</span></h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">An unexpected version directory `Assets` was encountered for the `/Users/wxkmac/.cocoapods/repos/coding-zippowxk-hisensecolorlib/HisenseColorLib` Pod in the `HisenseColorLib` repository.</span><br></pre></td></tr></table></figure>
+<p>解决方法:进入指定文件夹repos把HisenseColorLib删除即可。</p>
+<h2><span id="author">Author</span></h2>
+<p>[Luis Gin](mailto: <a href="mailto:hanqing93@gmail.com" target="_blank" rel="noopener">hanqing93@gmail.com</a>)</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2017/10/22/Swift说明/" data-toggle="tooltip" data-placement="top" title="">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2017/03/18/hexo-theme-beantech/" data-toggle="tooltip" data-placement="top" title="[Hexo] Theme BeanTech">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://beantech.org" target="_blank">Bean Tech</a></li>
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">It Helps SEO</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "http://yoursite-url/2017/10/22/CocoaPods全解析/";
+    var disqus_url = "http://yoursite-url/2017/10/22/CocoaPods全解析/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/YenYuHsuan">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/YenYuHsuan">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/yu-hsuan-yen">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Luis Gin 2018 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://yoursite-url/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="http://yoursite-url/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
